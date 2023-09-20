@@ -6,4 +6,6 @@ const setTimeout = () => {
     console.table(database_1.products);
 };
 setTimeout();
+console.log((0, database_1.createUser)("u003", "Astrodev", "astrodev@email.com", "astrodev99"));
+console.log((0, database_1.getAllUsers)());
 //# sourceMappingURL=index.js.map
