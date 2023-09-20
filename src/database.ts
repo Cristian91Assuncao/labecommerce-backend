@@ -33,3 +33,36 @@ export const products: TProducts[] = [
         imageUrl: "https://picsum.photos/seed/Monitor/400",
     }
 ]
+
+
+// EXERCÍCIO 1
+export const createUser = (id: string, name: string, email: string, password: string): string => {
+    const createdAt: string = new Date().toISOString();
+    const newUser: TUsers = { id, name, email, password, createdAt };
+    users.push(newUser);
+    return "Cadastro realizado com sucesso"
+}
+
+export const getAllUsers = (): TUsers[] => {
+    return users;
+}
+
+const listaDeUsuarios: TUsers[] = getAllUsers();
+
+// EXERCÍCIO 2
+export const createProduct = (id: string, name: string, price: number, description: string, imageUrl: string): string => {
+    const newProduct: TProducts = { id, name, price, description, imageUrl };
+    products.push(newProduct);
+    return "Produto criado com sucesso"
+}
+
+export const getAllProducts = (): TProducts[] => {
+    return products;
+}
+
+// EXERCÍCIO 3
+export const searchProductsByName = (name: string): TProducts[] => {
+    name = name.toLocaleLowerCase();
+    const searchProduct = products.filter(product => product.name.toLocaleLowerCase().includes(name));
+    return searchProduct;
+}
