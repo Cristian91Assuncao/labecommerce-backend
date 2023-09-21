@@ -1,5 +1,5 @@
 import { users, products, createUser, getAllUsers, createProduct, getAllProducts, searchProductsByName } from "./database";
-import  express, { Request, Response} from 'express'
+import express, { Request, Response } from 'express'
 
 //import do CORS 
 import cors from 'cors';
@@ -56,7 +56,7 @@ app.post("/users", (req: Request, res: Response) => {
     // };
     // users.push(newUser)    //OU CHAMANDO A FUNÇÃO COMO FEITO ABAIXO
 
-    const newUser = createUser (id, name, email, password);
+    const newUser = createUser(id, name, email, password);
 
     res.status(201).send("Cadastro realizado com sucesso");
 })
@@ -73,14 +73,49 @@ app.post("/products", (req: Request, res: Response) => {
     // };
     // products.push(newProduct)
 
-    const newProduct = createProduct (id, name, price, description, imageUrl);
+    const newProduct = createProduct(id, name, price, description, imageUrl);
 
     res.status(201).send("Produto cadastrado com sucesso")
-
 })
 
+app.delete("/users/:id", (req: Request, res: Response) => {
+    const id = req.params.id
+
+    const userToDelete = users.findIndex((user) => user.id === id)
+
+    users.splice(userToDelete, 1)
+
+    res.status(200).send({ message: "User apagado com sucesso" });
+})
+
+app.delete("/products/:id", (req: Request, res: Response) => {
+    const id = req.params.id
+
+    const productToDelete = products.findIndex((product) => product.id === id)
+
+    products.splice(productToDelete, 1)
+
+    res.status(200).send({ message: "Produto apagado com sucesso" });
+})
+
+app.put("/products/:id", (req: Request, res: Response) => {
+    const id = req.params.id
+    const newName = req.body.name as string | undefined
+    const newPrice = req.body.price as number | undefined
+    const newDescription = req.body.description as string | undefined
+    const newImageUrl = req.body.imageUrl as string | undefined
+
+    const product = products.find((product) => product.id === id);
+
+    product.name = newName || product.name
+    product.description = newDescription || product.description
+    product.imageUrl = newImageUrl || product.imageUrl
+
+    product.price = isNaN(newPrice) ? product.price : newPrice
 
 
+    res.status(200).send({ message: "Produto atualizado com sucesso" });
+})
 
 
 
