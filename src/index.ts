@@ -20,27 +20,46 @@ app.get("/ping", (req: Request, res: Response) => {
     res.send("pong!")
 })
 
-app.get("/users", (req: Request, res: Response) => {
-    const result: TUsers[] = users;
-
-    res.status(200).send(result);
+app.get("/users", (req: Request, res: Response): void => {
+    try {
+        const result: TUsers[] = users;
+    
+        res.status(200).send(result);
+        
+    } catch (error) {
+        res.send(error.message)
+    }
 })
 
-app.get("/products", (req: Request, res: Response) => {
-    const result: TProducts[] = products;
+app.get("/products", (req: Request, res: Response): void => {
+    try {
+        const result: TProducts[] = products;
+    
+        res.status(200).send(result);
 
-    res.status(200).send(result);
+    } catch (error) {
+        res.send(error.message)        
+    }
 })
 
 app.get("/products/search", (req: Request, res: Response) => {
-    const q: string = req.query.q as string;
-    const result: TProducts[] = products;
-
-    const productsByName: TProducts[] = products.filter(product => product.name.toLowerCase().includes(q.toLowerCase()));
-    if (q === undefined) {
-        res.status(200).send(result);
-    } else {
-        res.status(200).send(productsByName);
+    try {
+        const q: string = req.query.q as string;
+        const result: TProducts[] = products;
+    
+        const productsByName: TProducts[] = products.filter(product => product.name.toLowerCase().includes(q.toLowerCase()));
+        if (q === undefined) {
+            res.status(200).send(result);
+        } else {
+            if(q.length < 1) {
+                throw new Error("Pesquisa deve possuir no mínimo 1 caractere")
+            }
+            res.status(200).send(productsByName);
+        }        
+    } catch (error) {
+        if (error instanceof Error) {
+            res.send(error.message);
+        };        
     }
 })
 
@@ -78,35 +97,85 @@ app.post("/products", (req: Request, res: Response) => {
     res.status(201).send("Produto cadastrado com sucesso")
 })
 
-app.delete("/users/:id", (req: Request, res: Response) => {
-    const id = req.params.id
+app.delete("/users/:id", (req: Request, res: Response): void => {
+    try {
+        const id: string = req.params.id;
+        
+        const userIndex: number = users.findIndex((user) => user.id === id);
+        
+        if (userIndex < 0) {
+            res.statusCode = 400;
+            throw new Error("Conta não encontrada.");
+        } else {
+            users.splice(userIndex, 1);
+        };
+    
+        res.status(200).send({ message: "User apagado com sucesso" });        
+    } catch (error) {
+        if (error instanceof Error) {
+            res.send(error.message);
+        };
+    };
+    
+});
 
-    const userToDelete = users.findIndex((user) => user.id === id)
+app.delete("/products/:id", (req: Request, res: Response): void => {
+    try {
+        const id: string = req.params.id;
+    
+        const productIndex: number = products.findIndex((product) => product.id === id);
+    
+        if (productIndex < 0) {
+            res.statusCode = 400;
+            throw new Error("Produto não encontrado.");
+        } else {
+            products.splice(productIndex, 1);
+        }
+    
+        res.status(200).send({ message: "Produto apagado com sucesso" });        
+    } catch (error) {
+        if (error instanceof Error) {
+            res.send(error.message);
+        };
+    };
 
-    users.splice(userToDelete, 1)
-
-    res.status(200).send({ message: "User apagado com sucesso" });
 })
 
-app.delete("/products/:id", (req: Request, res: Response) => {
-    const id = req.params.id
+app.put("/products/:id", (req: Request, res: Response): void => {
+    try {
+        const id: string = req.params.id
 
-    const productToDelete = products.findIndex((product) => product.id === id)
+    const productIndex: number = products.findIndex((product) => product.id === id);
+    
+        if (productIndex < 0) {
+            res.statusCode = 404;
+            throw new Error("Produto não encontrado.");
+        }
 
-    products.splice(productToDelete, 1)
-
-    res.status(200).send({ message: "Produto apagado com sucesso" });
-})
-
-app.put("/products/:id", (req: Request, res: Response) => {
-    const id = req.params.id
+    const newId = req.body.id as string | undefined
     const newName = req.body.name as string | undefined
     const newPrice = req.body.price as number | undefined
     const newDescription = req.body.description as string | undefined
     const newImageUrl = req.body.imageUrl as string | undefined
 
-    const product = products.find((product) => product.id === id);
+    if (typeof newId !== "string") {
+			res.statusCode = 400;
+            throw new Error("'id' deve ser uma string");
+    }
 
+    if (typeof newName !== "string") {
+			res.statusCode = 400;
+            throw new Error("'name' deve ser uma string");
+    }
+
+    if (typeof newPrice !== "number" && newPrice < 0) {
+        res.statusCode = 404
+        throw new Error("'newPrice' deve ser tipo 'number' e maior do que zero")
+    }
+
+    const product: TProducts | undefined = products.find((product) => product.id === id);
+
+    product.id = newId || product.id
     product.name = newName || product.name
     product.description = newDescription || product.description
     product.imageUrl = newImageUrl || product.imageUrl
@@ -115,6 +184,11 @@ app.put("/products/:id", (req: Request, res: Response) => {
 
 
     res.status(200).send({ message: "Produto atualizado com sucesso" });
+    } catch (error) {
+        if (error instanceof Error) {
+            res.send(error.message)
+        }
+    }
 })
 
 
