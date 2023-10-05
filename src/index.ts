@@ -267,7 +267,6 @@ app.put("/products/:id", (req: Request, res: Response): void => {
 
 
 
-
 const setTimeout = () => {
     console.table(users);
     console.table(products);
