@@ -64,37 +64,99 @@ app.get("/products/search", (req: Request, res: Response) => {
 })
 
 app.post("/users", (req: Request, res: Response) => {
-    const { id, name, email, password } = req.body;
 
-    // const newUser: TUsers = {
-    //     id,
-    //     name,
-    //     email,
-    //     password,
-    //     createdAt: new Date().toISOString()
-    // };
-    // users.push(newUser)    //OU CHAMANDO A FUNÇÃO COMO FEITO ABAIXO
+    try {
+        const { id, name, email, password } = req.body;
 
-    const newUser = createUser(id, name, email, password);
+        if (!name || name.length < 3) {
+            res.statusCode = 404
+            throw new Error('O nome deve conter ao menos 3 caracteres!')
+        }
 
-    res.status(201).send("Cadastro realizado com sucesso");
+        if (!email) {
+            res.statusCode = 404
+            throw new Error('O email é obrigatório!')
+        }
+
+        if (!email.includes('@')) {
+            res.statusCode = 404
+            throw new Error('O email deve conter o @!')
+        }
+
+        if (!email.includes('.com')) {
+            res.statusCode = 404
+            throw new Error('O email deve conter o .com!')
+        }
+
+        if (password.length < 8) {
+            res.statusCode = 404
+            throw new Error('O password deve conter ao menos 8 caracteres!')
+        }
+
+        if (password.length > 12) {
+            res.statusCode = 404
+            throw new Error('O password não deve conter mais de 12 caracteres!')
+        }
+
+        if (password.includes(Number.length >= 1)) {
+            res.statusCode = 404
+            throw new Error('O password deve conter ao menos 1 caracter numérico!')
+        }
+    
+        const newUser: TUsers = {
+            id,
+            name,
+            email,
+            password,
+            createdAt: new Date().toISOString()
+        };
+        users.push(newUser)    //OU CHAMANDO A FUNÇÃO COMO FEITO ABAIXO
+    
+        // const newUser = createUser(id, name, email, password);
+    
+        res.status(201).send("Cadastro realizado com sucesso");
+        
+    } catch (error) {
+        res.send(error.message)
+    }
+
 })
 
 app.post("/products", (req: Request, res: Response) => {
-    const { id, name, price, description, imageUrl } = req.body;
+    try {
+        const { id, name, price, description, imageUrl } = req.body;
 
-    // const newProduct: TProducts = {
-    //     id,
-    //     name,
-    //     price,
-    //     description,
-    //     imageUrl
-    // };
-    // products.push(newProduct)
+        if (!name || name.length < 3) {
+            res.statusCode = 404
+            throw new Error('O nome deve conter ao menos 3 caracteres!')
+        }
 
-    const newProduct = createProduct(id, name, price, description, imageUrl);
+        if (price <= 0) {
+            res.statusCode = 404
+            throw new Error('O preço deve ser maior que zero!')
+        }
 
-    res.status(201).send("Produto cadastrado com sucesso")
+        if (description.length > 26) {
+            res.statusCode = 404
+            throw new Error('A descrição do produto não deve conter mais de 26 caracteres!')
+        }
+    
+        // const newProduct: TProducts = {
+        //     id,
+        //     name,
+        //     price,
+        //     description,
+        //     imageUrl
+        // };
+        // products.push(newProduct)
+    
+        const newProduct = createProduct(id, name, price, description, imageUrl);
+    
+        res.status(201).send("Produto cadastrado com sucesso")
+        
+    } catch (error) {
+        res.send(error.message)
+    }
 })
 
 app.delete("/users/:id", (req: Request, res: Response): void => {
@@ -158,19 +220,29 @@ app.put("/products/:id", (req: Request, res: Response): void => {
     const newDescription = req.body.description as string | undefined
     const newImageUrl = req.body.imageUrl as string | undefined
 
-    if (typeof newId !== "string") {
-			res.statusCode = 400;
-            throw new Error("'id' deve ser uma string");
-    }
+    // if (typeof newId !== "string") {
+	// 		res.statusCode = 400;
+    //         throw new Error("'id' deve ser uma string");
+    // }
 
     if (typeof newName !== "string") {
-			res.statusCode = 400;
+			res.statusCode = 404;
             throw new Error("'name' deve ser uma string");
     }
 
+    if (newName.length < 3) {
+        res.statusCode = 404;
+        throw new Error('O nome deve conter ao menos 3 caracteres!')
+    }
+
     if (typeof newPrice !== "number" && newPrice < 0) {
-        res.statusCode = 404
+        res.statusCode = 404;
         throw new Error("'newPrice' deve ser tipo 'number' e maior do que zero")
+    }
+
+    if (newDescription.length > 26) {
+        res.statusCode = 404;
+        throw new Error('A descrição do produto não deve conter mais de 26 caracteres!')
     }
 
     const product: TProducts | undefined = products.find((product) => product.id === id);
@@ -190,7 +262,6 @@ app.put("/products/:id", (req: Request, res: Response): void => {
         }
     }
 })
-
 
 
 
