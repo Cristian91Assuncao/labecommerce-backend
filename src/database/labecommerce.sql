@@ -12,6 +12,8 @@ SELECT * FROM users;
 
 DROP TABLE users;
 
+DROP TABLE products;
+
 INSERT INTO users ( id, name, email, password )
 VALUES ( 'us001', 'Cartman', 'cartman@email.com', '123456' );
 
@@ -45,4 +47,32 @@ INSERT INTO products ( id, name, price, description, image_url )
 VALUES ( 'pro004', 'Fone Bluetooth', 120, 'Fone bluetooth com som fodaaa', 'image' );
 
 INSERT INTO products ( id, name, price, description, image_url )
-VALUES ( 'pro005', 'Teclado Bluetooth', 150, 'Teclado liso e resistente', 'image' );
+VALUES ( 'pro005', 'Teclado gamer Bluetooth', 150, 'Teclado liso e resistente', 'image' );
+
+
+SELECT * FROM users;
+
+SELECT * FROM products;
+
+SELECT * FROM products
+WHERE name like 'gamer%' or name like '%gamer%' or name like '%gamer';
+
+INSERT INTO users ( id, name, email, password )
+VALUES ( 'us004', 'Kyle', 'kyle@email.com', '123456' );
+
+INSERT INTO products ( id, name, price, description, image_url )
+VALUES ( 'pro006', 'Mouse gamer Bluetooth', 100, 'Mouse gamer resistente', 'image' );
+
+DELETE FROM users
+WHERE id = 'us001';
+
+DELETE FROM products
+WHERE id = 'pro001';
+
+UPDATE products
+SET
+    name = 'Joystick Sem fio Para Pc',
+    price = 250,
+    description = 'Melhor joystick para Pc',
+    image_url = 'image'
+WHERE id = 'pro004';
