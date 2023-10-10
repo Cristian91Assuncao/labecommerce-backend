@@ -106,6 +106,6 @@ users.id as idUsuário,
 users.name as Nome,
 users.email as Email,
 purchases.total_price as PreçoTotal,
-purchases.created_at as DataCompra
+purchases.created_at as Data
 FROM users
 INNER JOIN purchases ON users.id = purchases.buyer;
