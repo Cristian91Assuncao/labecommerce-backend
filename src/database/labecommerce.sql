@@ -76,3 +76,36 @@ SET
     description = 'Melhor joystick para Pc',
     image_url = 'image'
 WHERE id = 'pro004';
+
+CREATE TABLE purchases (
+id TEXT PRIMARY KEY UNIQUE NOT NULL,
+buyer TEXT NOT NULL,
+total_price REAL NOT NULL,
+created_at TEXT NOT NULL,
+FOREIGN KEY(buyer) REFERENCES users(id)
+);
+
+SELECT * FROM purchases
+
+DROP TABLE purchases;
+
+INSERT INTO purchases
+VALUES ('pur01', 'us001', 199.99, DATETIME());
+
+INSERT INTO purchases
+VALUES ('pur02', 'us002', 99.99, DATETIME());
+
+UPDATE purchases
+SET
+    total_price = 500.00
+WHERE id = 'pur02';
+
+SELECT
+purchases.id as idCompra,
+users.id as idUsuário,
+users.name as Nome,
+users.email as Email,
+purchases.total_price as PreçoTotal,
+purchases.created_at as DataCompra
+FROM users
+INNER JOIN purchases ON users.id = purchases.buyer;
