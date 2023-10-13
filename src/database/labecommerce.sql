@@ -54,6 +54,8 @@ SELECT * FROM users;
 
 SELECT * FROM products;
 
+DROP TABLE products;
+
 SELECT * FROM products
 WHERE name like 'gamer%' or name like '%gamer%' or name like '%gamer';
 
@@ -109,3 +111,43 @@ purchases.total_price as PreçoTotal,
 purchases.created_at as Data
 FROM users
 INNER JOIN purchases ON users.id = purchases.buyer;
+
+
+CREATE TABLE purchases_products (
+    purchase_id TEXT NOT NULL,
+    product_id TEXT NOT NULL,
+    quantity INTEGER NOT NULL,
+    FOREIGN KEY(purchase_id) REFERENCES purchases(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+    FOREIGN KEY(product_id) REFERENCES products(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE
+);
+
+INSERT INTO purchases_products
+VALUES ('pur01', 'pro001', 2), ('pur02', 'pro003', 5), ('pur02', 'pro005', 3);
+
+SELECT * FROM purchases_products;
+
+SELECT * FROM purchases_products
+INNER JOIN products
+ON purchases_products.product_id = products.id
+INNER JOIN purchases
+ON purchases_products.purchase_id = purchases.id;
+
+DROP TABLE purchases_products;
+
+UPDATE products
+SET id = 'pro009'
+WHERE id = 'pro001';
+
+UPDATE purchases
+SET id = 'pur09'
+WHERE id = 'pur01';
+
+DELETE FROM products
+WHERE id = 'pro003';
+
+DELETE FROM purchases
+WHERE id = 'pur02';
