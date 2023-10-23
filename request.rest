@@ -1,0 +1,59 @@
+GET http://localhost:3003/ping
+###
+
+GET http://localhost:3003/users
+###
+
+GET http://localhost:3003/products
+###
+
+POST http://localhost:3003/users
+Content-Type: application/json
+
+{
+    "id": "us004",
+    "name": "Tiane",
+    "email": "tiane@email.com",
+    "password": "19135784"
+}
+###
+
+POST http://localhost:3003/products
+Content-Type: application/json
+
+{
+    "id": "pro006",
+    "name": "Escrivaninha Regulável",
+    "price": 499,
+    "description": "Escrivaninha regulável",
+    "imageUrl": "Image"
+}
+###
+
+GET http://localhost:3003/purchases
+###
+
+POST http://localhost:3003/purchases
+Content-Type: application/json
+
+{
+    "id": "pur04",
+    "buyer": "us004",
+    "total_price": "199.99"
+}
+###
+
+PUT http://localhost:3003/products/pro006
+Content-Type: application/json
+
+{
+    "newId": "pro006",
+    "newName": "Escrivaninha Regulável",
+    "newPrice": 699,
+    "newDescription": "Escrivaninha regulável",
+    "newImageUrl": "Image"
+}
+###
+
+DELETE http://localhost:3003/purchases/pur04
+###
