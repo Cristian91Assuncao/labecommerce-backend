@@ -54,6 +54,8 @@ SELECT * FROM users;
 
 SELECT * FROM products;
 
+DROP TABLE products;
+
 SELECT * FROM products
 WHERE name like 'gamer%' or name like '%gamer%' or name like '%gamer';
 
