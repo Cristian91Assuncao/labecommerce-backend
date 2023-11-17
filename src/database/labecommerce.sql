@@ -15,13 +15,13 @@ DROP TABLE users;
 DROP TABLE products;
 
 INSERT INTO users ( id, name, email, password )
-VALUES ( 'us001', 'Cartman', 'cartman@email.com', '123456' );
+VALUES ( 'us001', 'Cristian', 'cristian@email.com', '123456' );
 
 INSERT INTO users ( id, name, email, password )
-VALUES ( 'us002', 'Kenny', 'kenny@email.com', '123456' );
+VALUES ( 'us002', 'Amanda', 'amanda@email.com', '123456' );
 
 INSERT INTO users ( id, name, email, password )
-VALUES ( 'us003', 'Stan', 'stan@email.com', '123456' );
+VALUES ( 'us003', 'Eunice', 'eunice@email.com', '123456' );
 
 
 CREATE TABLE products (
@@ -60,16 +60,16 @@ SELECT * FROM products
 WHERE name like 'gamer%' or name like '%gamer%' or name like '%gamer';
 
 INSERT INTO users ( id, name, email, password )
-VALUES ( 'us004', 'Kyle', 'kyle@email.com', '123456' );
+VALUES ( 'us004', 'Clayton', 'clayton@email.com', '123456' );
 
 INSERT INTO products ( id, name, price, description, image_url )
 VALUES ( 'pro006', 'Mouse gamer Bluetooth', 100, 'Mouse gamer resistente', 'image' );
 
 DELETE FROM users
-WHERE id = 'us001';
+WHERE id = 'us004';
 
 DELETE FROM products
-WHERE id = 'pro001';
+WHERE id = 'pro006';
 
 UPDATE products
 SET
@@ -83,8 +83,10 @@ CREATE TABLE purchases (
 id TEXT PRIMARY KEY UNIQUE NOT NULL,
 buyer TEXT NOT NULL,
 total_price REAL NOT NULL,
-created_at TEXT NOT NULL,
+created_at TEXT DEFAULT(DATETIME()) NOT NULL,
 FOREIGN KEY(buyer) REFERENCES users(id)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE
 );
 
 SELECT * FROM purchases
