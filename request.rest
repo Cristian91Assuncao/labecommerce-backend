@@ -11,9 +11,9 @@ POST http://localhost:3003/users
 Content-Type: application/json
 
 {
-    "id": "us004",
-    "name": "Tiane",
-    "email": "tiane@email.com",
+    "id": "us005",
+    "name": "Tina",
+    "email": "tina@email.com",
     "password": "19135784"
 }
 ###
@@ -33,6 +33,9 @@ Content-Type: application/json
 GET http://localhost:3003/purchases
 ###
 
+GET http://localhost:3003/purchases/pur09
+###
+
 POST http://localhost:3003/purchases
 Content-Type: application/json
 
@@ -43,14 +46,14 @@ Content-Type: application/json
 }
 ###
 
-PUT http://localhost:3003/products/pro006
+PUT http://localhost:3003/products/pro007
 Content-Type: application/json
 
 {
-    "newId": "pro006",
-    "newName": "Escrivaninha Regulável",
-    "newPrice": 699,
-    "newDescription": "Escrivaninha regulável",
+    "newId": "pro007",
+    "newName": "Home Theater",
+    "newPrice": 1199,
+    "newDescription": "Caixa de Som 2.1 Subwoofer",
     "newImageUrl": "Image"
 }
 ###
