@@ -24,7 +24,8 @@ app.get("/ping", (req: Request, res: Response) => {
 app.get("/users", async (req: Request, res: Response) => {
     try {
 
-        const result = await db.raw(`SELECT * FROM users`)
+        // const result = await db.raw(`SELECT * FROM users`)
+        const result = await db('users')
 
         // const result: TUsers[] = users;
     
@@ -47,7 +48,8 @@ app.get("/users", async (req: Request, res: Response) => {
 app.get("/products", async (req: Request, res: Response) => {
     try {
 
-        const result = await db.raw(`SELECT * FROM products`)
+        // const result = await db.raw(`SELECT * FROM products`)
+        const result = await db('products')
 
         // const result: TProducts[] = products;
     
@@ -153,9 +155,17 @@ app.post("/users", async (req: Request, res: Response) => {
         //     throw new Error('O password deve conter ao menos 1 caracter numérico!')
         // }
 
-        await db.raw(`INSERT INTO users
-            VALUES("${id}", "${name}", "${email}", "${password}", "${new Date().toISOString()}")
-        `)
+        // await db.raw(`INSERT INTO users
+        //     VALUES("${id}", "${name}", "${email}", "${password}", "${new Date().toISOString()}")
+        // `)
+
+        const newUser = {
+            id,
+            name,
+            email,
+            password
+        }
+        await db('users').insert(newUser)
     
         // const newUser: TUsers = {
         //     id,
@@ -231,6 +241,15 @@ app.post("/products", async (req: Request, res: Response) => {
         await db.raw(`INSERT INTO products
             VALUES("${id}", "${name}", "${price}", "${description}", "${imageUrl}")
         `)
+
+        // const newProduct = {
+        //     id,
+        //     name,
+        //     price,
+        //     description,
+        //     imageUrl
+        // };
+        // await db('products').insert(newProduct)
     
         // const newProduct: TProducts = {
         //     id,
@@ -262,7 +281,34 @@ app.post("/products", async (req: Request, res: Response) => {
 app.get("/purchases", async (req: Request, res: Response) => {
     try {
 
-        const result = await db.raw(`SELECT * FROM purchases`)
+        // const result = await db.raw(`SELECT * FROM purchases`)
+
+        const result = await db('purchases')
+    
+        res.status(200).send(result);
+
+    } catch (error: any) {
+
+        if(req.statusCode === 200){
+            res.status(500)
+        }
+
+        if (error instanceof Error) {
+            res.send(error.message)            
+        } else {
+            res.send("Erro inesperado")
+        }
+    }
+})
+
+app.get("/purchases/:id", async (req: Request, res: Response) => {
+    try {
+
+        const id: string = req.params.id
+
+        // const result = await db.raw(`SELECT * FROM purchases`)
+
+        const result = await db(id)
     
         res.status(200).send(result);
 
@@ -287,9 +333,15 @@ app.post("/purchases", async (req: Request, res: Response) => {
     // created_at TEXT NOT NULL,
     // FOREIGN KEY(buyer) REFERENCES users(id)
 
-        await db.raw(`INSERT INTO purchases
-            VALUES("${id}", "${buyer}", "${total_price}", "${new Date().toISOString()}")
-        `)
+        // await db.raw(`INSERT INTO purchases
+        //     VALUES("${id}", "${buyer}", "${total_price}", "${new Date().toISOString()}")
+        // `)        
+        const newPurchase = {
+            id,
+            buyer,
+            total_price
+        }
+        await db('purchases').insert(newPurchase)
     
         res.status(201).send("Purchases cadastrado com sucesso");
         
@@ -440,7 +492,9 @@ app.put("/products/:id", async (req: Request, res: Response)=> {
         }
     }
 
-    const [product] = await db.raw(`SELECT * FROM products WHERE id = "${id}"`)
+    // const [product] = await db.raw(`SELECT * FROM products WHERE id = "${id}"`)
+
+    const [product] = await db('products').where({id: id})
     
     if(product) {
         await db.raw(`
@@ -448,6 +502,15 @@ app.put("/products/:id", async (req: Request, res: Response)=> {
             id = "${newId || product.id}", name = "${newName || product.name}", price = "${newPrice || product.price}", description = "${newDescription || product.description}", image_url = "${newImageUrl || product.imageUrl}"
             WHERE id = "${id}"
         `)
+
+        // const updateProduct = {
+        //     id: newId || product.id,
+        //     name: newName || product.name,
+        //     price: newPrice || product.price,
+        //     description: newDescription || product.description,
+        //     imageUrl: newImageUrl || product.imageUrl
+        // }
+        // await db.update(updateProduct).from('products').where({id: id})
     } else {
         res.statusCode = 400;
         throw new Error("Id não encontrado")
