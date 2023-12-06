@@ -45,52 +45,6 @@ app.get("/users", async (req: Request, res: Response) => {
     }
 })
 
-app.get("/products", async (req: Request, res: Response) => {
-    try {
-
-        // const result = await db.raw(`SELECT * FROM products`)
-        const result: TProducts[] = await db('products')
-
-        // const result: TProducts[] = products;
-
-        res.status(200).send(result);
-
-    } catch (error: any) {
-
-        if (req.statusCode === 200) {
-            res.status(500)
-        }
-
-        if (error instanceof Error) {
-            res.send(error.message)
-        } else {
-            res.send("Erro inesperado")
-        }
-    }
-})
-
-app.get("/products/search", async (req: Request, res: Response) => {
-    try {
-        const q: string = req.query.q as string || undefined;
-
-        if (q) {
-            const result: TProducts[] = await db("products")
-                .where("name", "LIKE", `%${q}%`)
-
-            res.status(200).send(result)
-        } else {
-            const result: TProducts[] = await db("products")
-
-            res.status(200).send(result)
-        }
-
-    } catch (error) {
-        if (error instanceof Error) {
-            res.send(error.message);
-        };
-    }
-})
-
 app.post("/users", async (req: Request, res: Response) => {
 
     try {
@@ -184,6 +138,88 @@ app.post("/users", async (req: Request, res: Response) => {
         } else {
             res.send("Erro inesperado")
         }
+    }
+})
+
+app.delete("/users/:id", async (req: Request, res: Response) => {
+    try {
+        const id: string = req.params.id;
+
+        if (!id || id.length !== 5) {
+            res.status(400).send("Informe um 'id' de 5 caracteres.");
+            return;
+        }
+
+        const [user] = await db("users").where({ id });
+
+        if (user) {
+            await db("users").where({ id }).delete();
+            res.status(200).send("Usuário deletado com sucesso");
+        } else {
+            res.status(404).send("Usuário não encontrado");
+        }
+
+        // const userIndex: number = users.findIndex((user) => user.id === id);
+
+        // if (userIndex < 0) {
+        //     res.statusCode = 400;
+        //     throw new Error("Conta não encontrada.");
+        // } else {
+        //     users.splice(userIndex, 1);
+        // };
+
+        // res.status(200).send({ message: "User apagado com sucesso" });        
+    } catch (error) {
+        if (error instanceof Error) {
+            res.send(error.message);
+        };
+    };
+
+});
+
+app.get("/products", async (req: Request, res: Response) => {
+    try {
+
+        // const result = await db.raw(`SELECT * FROM products`)
+        const result: TProducts[] = await db('products')
+
+        // const result: TProducts[] = products;
+
+        res.status(200).send(result);
+
+    } catch (error: any) {
+
+        if (req.statusCode === 200) {
+            res.status(500)
+        }
+
+        if (error instanceof Error) {
+            res.send(error.message)
+        } else {
+            res.send("Erro inesperado")
+        }
+    }
+})
+
+app.get("/products/search", async (req: Request, res: Response) => {
+    try {
+        const q: string = req.query.q as string || undefined;
+
+        if (q) {
+            const result: TProducts[] = await db("products")
+                .where("name", "LIKE", `%${q}%`)
+
+            res.status(200).send(result)
+        } else {
+            const result: TProducts[] = await db("products")
+
+            res.status(200).send(result)
+        }
+
+    } catch (error) {
+        if (error instanceof Error) {
+            res.send(error.message);
+        };
     }
 })
 
@@ -304,6 +340,91 @@ app.post("/products", async (req: Request, res: Response) => {
             res.send("Erro inesperado")
         }
     }
+})
+
+app.put("/products/:id", async (req: Request, res: Response) => {
+    try {
+        const id = req.params.id;
+    
+        const newId = req.body.newId as string | undefined;
+        const newName = req.body.newName as string | undefined;
+        const newPrice = req.body.newPrice as number | undefined;
+        const newDescription = req.body.newDescription as string | undefined;
+        const newImageUrl = req.body.newImageUrl as string | undefined;
+    
+        const [product] = await db.raw("SELECT * FROM products WHERE id = ?", [id]);
+    
+        if (product.length === 0) {
+          res.statusCode = 404;
+          throw new Error(`Esse produto não existe`);
+        }
+    
+        if (newName?.length === 0) {
+          res.statusCode = 404;
+          throw new Error("Novo produto deve ter mais que 1 caracter");
+        }
+    
+        if (newPrice !== undefined && newPrice <= 0) {
+          res.statusCode = 404;
+          throw new Error("Novo preço menor que R$ 1");
+        }
+    
+        if (newDescription?.length === 0) {
+          res.statusCode = 404;
+          throw new Error("Nova descrição deve ter mais que 1 caracter");
+        }
+    
+        const [newProduct] = await db.raw(
+          `SELECT * FROM products WHERE id = "${id}"`
+        );
+    
+        if (newProduct) {
+          await db.raw(`UPDATE products SET
+          id = "${newId || newProduct.id}",
+          name = "${newName || newProduct.name}",
+          price = "${newPrice || newProduct.price}",
+          description = "${newDescription || newProduct.description}",
+          image_Url = "${newImageUrl || newProduct.image_Url}"
+          WHERE id = "${id}"
+          `);
+    
+          res.status(200).send("Produto editado com sucesso");
+        }
+    } catch (error) {
+        if (error instanceof Error) {
+            res.send(error.message)
+        }
+    }
+})
+
+app.delete("/products/:id", async (req: Request, res: Response) => {
+    try {
+        const id: string = req.params.id;
+
+        if (typeof id !== "string" || id.length !== 6) {
+            res.status(400).send({ message: "Informe um 'id' de 6 caracteres." });
+            return;  
+          }
+      
+          const productIndex = await db("products").where({ id });
+
+        // const productIndex: number = products.findIndex((product) => product.id === id);
+
+        if (productIndex.length === 0) {
+            res.statusCode = 400;
+            throw new Error("Produto não encontrado.");
+        } else {
+            await db("products").where({ id }).delete();
+            res.status(200).send({ message: "Produto deletado com sucesso" })
+        }
+
+        // res.status(200).send({ message: "Produto apagado com sucesso" });
+    } catch (error) {
+        if (error instanceof Error) {
+            res.send(error.message);
+        };
+    };
+
 })
 
 app.get("/purchases", async (req: Request, res: Response) => {
@@ -539,71 +660,6 @@ app.post("/purchases", async (req: Request, res: Response) => {
     }
 })
 
-app.delete("/users/:id", async (req: Request, res: Response) => {
-    try {
-        const id: string = req.params.id;
-
-        if (!id || id.length !== 5) {
-            res.status(400).send("Informe um 'id' de 5 caracteres.");
-            return;
-        }
-
-        const [user] = await db("users").where({ id });
-
-        if (user) {
-            await db("users").where({ id }).delete();
-            res.status(200).send("Usuário deletado com sucesso");
-        } else {
-            res.status(404).send("Usuário não encontrado");
-        }
-
-        // const userIndex: number = users.findIndex((user) => user.id === id);
-
-        // if (userIndex < 0) {
-        //     res.statusCode = 400;
-        //     throw new Error("Conta não encontrada.");
-        // } else {
-        //     users.splice(userIndex, 1);
-        // };
-
-        // res.status(200).send({ message: "User apagado com sucesso" });        
-    } catch (error) {
-        if (error instanceof Error) {
-            res.send(error.message);
-        };
-    };
-
-});
-
-app.delete("/products/:id", async (req: Request, res: Response) => {
-    try {
-        const id: string = req.params.id;
-
-        if (typeof id !== "string" || id.length !== 6) {
-            res.status(400).send({ message: "Informe um 'id' de 6 caracteres." });
-            return;  
-          }
-      
-          const productIndex = await db("products").where({ id });
-
-        // const productIndex: number = products.findIndex((product) => product.id === id);
-
-        if (productIndex.length === 0) {
-            res.statusCode = 400;
-            throw new Error("Produto não encontrado.");
-        } else {
-            await db("products").where({ id }).delete();
-            res.status(200).send({ message: "Produto deletado com sucesso" })
-        }
-
-        // res.status(200).send({ message: "Produto apagado com sucesso" });
-    } catch (error) {
-        if (error instanceof Error) {
-            res.send(error.message);
-        };
-    };
-
-})
 app.delete("/purchases/:id", async (req: Request, res: Response) => {
     try {
         const idToDelete: string = req.params.id;
@@ -630,61 +686,6 @@ app.delete("/purchases/:id", async (req: Request, res: Response) => {
         };
     };
 
-})
-
-app.put("/products/:id", async (req: Request, res: Response) => {
-    try {
-        const id = req.params.id;
-    
-        const newId = req.body.newId as string | undefined;
-        const newName = req.body.newName as string | undefined;
-        const newPrice = req.body.newPrice as number | undefined;
-        const newDescription = req.body.newDescription as string | undefined;
-        const newImageUrl = req.body.newImageUrl as string | undefined;
-    
-        const [product] = await db.raw("SELECT * FROM products WHERE id = ?", [id]);
-    
-        if (product.length === 0) {
-          res.statusCode = 404;
-          throw new Error(`Esse produto não existe`);
-        }
-    
-        if (newName?.length === 0) {
-          res.statusCode = 404;
-          throw new Error("Novo produto deve ter mais que 1 caracter");
-        }
-    
-        if (newPrice !== undefined && newPrice <= 0) {
-          res.statusCode = 404;
-          throw new Error("Novo preço menor que R$ 1");
-        }
-    
-        if (newDescription?.length === 0) {
-          res.statusCode = 404;
-          throw new Error("Nova descrição deve ter mais que 1 caracter");
-        }
-    
-        const [newProduct] = await db.raw(
-          `SELECT * FROM products WHERE id = "${id}"`
-        );
-    
-        if (newProduct) {
-          await db.raw(`UPDATE products SET
-          id = "${newId || newProduct.id}",
-          name = "${newName || newProduct.name}",
-          price = "${newPrice || newProduct.price}",
-          description = "${newDescription || newProduct.description}",
-          image_Url = "${newImageUrl || newProduct.image_Url}"
-          WHERE id = "${id}"
-          `);
-    
-          res.status(200).send("Produto editado com sucesso");
-        }
-    } catch (error) {
-        if (error instanceof Error) {
-            res.send(error.message)
-        }
-    }
 })
 
 
