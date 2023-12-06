@@ -610,42 +610,7 @@ app.post("/purchases", async (req: Request, res: Response) => {
     } else {
       throw new Error("Os dados devem ser do formato correto (string para 'buyer' e número para 'quantity').");
     }
-
         
-        // const { id, buyer, total_price } = req.body;
-
-        // if (typeof id !== "string") {
-        //     res.status(400)
-        //     throw new Error("'id' deve ser string")
-        // }
-
-        // if (typeof buyer !== "string") {
-        //     res.status(400)
-        //     throw new Error("'buyer' deve ser string")
-        // }
-
-        // if (typeof total_price !== "number") {
-        //     res.status(400)
-        //     throw new Error("'total_price' deve ser number")
-        // }
-
-
-        // const [purchasesIdExistents]: TPurchases[] | undefined[] = await db("purchases").where({id})
-
-        // if(purchasesIdExistents) {
-        //     res.status(400)
-        //     throw new Error("'id' já existe")
-        // }
-
-        // const newPurchase = {
-        //     id,
-        //     buyer,
-        //     total_price
-        // }
-        // await db('purchases').insert(newPurchase)
-
-        // res.status(201).send("Purchases cadastrado com sucesso");
-
     } catch (error: any) {
 
         if (req.statusCode === 200) {
