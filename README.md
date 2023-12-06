@@ -23,7 +23,6 @@ O Projeto Labecommerce é uma API de gerenciamento de usuários, produtos e comp
 https://documenter.getpostman.com/view/28316405/2s9YJdXNkv
 
 
-
 ## Tecnologias
 
 As seguintes ferramentas foram usadas na construção do projeto:
@@ -61,5 +60,8 @@ npm i
 ```sh
 npm run dev
 ```
+
+5. Agora é só utilizar a API para interagir com o projeto.
+
 
 Feito por <a href="https://github.com/Cristian91Assuncao" target="_blank">Cristian Assunção</a>
