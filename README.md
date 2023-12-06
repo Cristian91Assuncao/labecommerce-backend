@@ -5,17 +5,17 @@ O Projeto Labecommerce é uma API de gerenciamento de usuários, produtos e comp
 
 # Lista de requisitos
 
-- [] Get all users
-- [] Get all products
-- [] Search Products by id
-- [] Search Purchase by id
-- [] Create user
-- [] Create product
-- [] Create purchase
-- [] Delete user by id
-- [] Delete product by id
-- [] Delete purchase by id
-- [] Edit product by id
+- [ ] Get all users
+- [ ] Get all products
+- [ ] Search Products by id
+- [ ] Search Purchase by id
+- [ ] Create user
+- [ ] Create product
+- [ ] Create purchase
+- [ ] Delete user by id
+- [ ] Delete product by id
+- [ ] Delete purchase by id
+- [ ] Edit product by id
 
 
 ## Link da Documentação
