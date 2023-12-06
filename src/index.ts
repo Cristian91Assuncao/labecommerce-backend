@@ -495,47 +495,7 @@ app.get("/purchases/:id", async (req: Request, res: Response) => {
           };
 
         res.status(200).send(result);
-    // try {
-    //     const purchaseId = req.params.id;
     
-    //     const purchase = await db('purchases')
-    //       .select('purchases.id as purchaseId', 'buyer as buyerId', 'total_price as totalPrice', 'created_at as createdAt')
-    //       .where('purchases.id', purchaseId)
-    //       .first();
-    
-    //     if (!purchase) {
-    //       res.status(404).send({ message: "Compra não encontrada" });
-    //       return;
-    //     }
-    
-    //     const buyer = await db('users')
-    //       .select('id as buyerId', 'name as buyerName', 'email as buyerEmail')
-    //       .where('id', purchase.buyerId)
-    //       .first();
-    
-    //     if (!buyer) {
-    //       res.status(404).send({ message: "Comprador não encontrado" });
-    //       return;
-    //     }
-    
-    //     const productsInfo = await db('purchases_products')
-    //       .select('products.id', 'products.name', 'products.price', 'products.description', 'products.image_url as imageUrl', 'purchases_products.quantity')
-    //       .join('products', 'products.id', 'purchases_products.product_id')
-    //       .where('purchases_products.purchase_id', purchaseId);
-    
-    //     if (productsInfo.length === 0) {
-    //       res.status(404).send({ message: "Nenhum produto encontrado para esta compra" });
-    //       return;
-    //     }
-    
-    //     const purchaseInfo = {
-    //       ...purchase,
-    //       ...buyer,
-    //       products: productsInfo,
-    //     };
-    
-    //     res.status(200).send(purchaseInfo);
-
     } catch (error: any) {
 
         if (req.statusCode === 200) {
