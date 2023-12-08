@@ -28,10 +28,10 @@ https://documenter.getpostman.com/view/28316405/2s9YJdXNkv
 As seguintes ferramentas foram usadas na construção do projeto:
 
 - NodeJS
-- Express JS
 - TypeScript
+- Express
+- Sql e Sqlite
 - Knex
-- Sqlite
 - Postman
 - Git
 
