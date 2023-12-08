@@ -1,4 +1,4 @@
--- Active: 1700249650742@@127.0.0.1@3306
+-- Active: 1701663689697@@127.0.0.1@3306
 
 CREATE TABLE users (
     id TEXT PRIMARY KEY UNIQUE NOT NULL,
@@ -15,13 +15,9 @@ DROP TABLE users;
 DROP TABLE products;
 
 INSERT INTO users ( id, name, email, password )
-VALUES ( 'us001', 'Cristian', 'cristian@email.com', '123456' );
-
-INSERT INTO users ( id, name, email, password )
-VALUES ( 'us002', 'Amanda', 'amanda@email.com', '123456' );
-
-INSERT INTO users ( id, name, email, password )
-VALUES ( 'us003', 'Eunice', 'eunice@email.com', '123456' );
+VALUES ( 'us001', 'Cristian', 'cristian@email.com', '123456' ),
+( 'us002', 'Amanda', 'amanda@email.com', '123456' ),
+( 'us003', 'Eunice', 'eunice@email.com', '123456' );
 
 
 CREATE TABLE products (
@@ -35,19 +31,11 @@ CREATE TABLE products (
 SELECT * FROM products;
 
 INSERT INTO products ( id, name, price, description, image_url )
-VALUES ( 'pro001', 'Notebook', 3500, 'Notebook Dell', 'image' );
-
-INSERT INTO products ( id, name, price, description, image_url )
-VALUES ( 'pro002', 'Cadeira Gamer', 999, 'Cadeira super confortável', 'image' );
-
-INSERT INTO products ( id, name, price, description, image_url )
-VALUES ( 'pro003', 'Escrivaninha', 650, 'Escrivaninha de escritório', 'image' );
-
-INSERT INTO products ( id, name, price, description, image_url )
-VALUES ( 'pro004', 'Fone Bluetooth', 120, 'Fone bluetooth com som fodaaa', 'image' );
-
-INSERT INTO products ( id, name, price, description, image_url )
-VALUES ( 'pro005', 'Teclado gamer Bluetooth', 150, 'Teclado liso e resistente', 'image' );
+VALUES ( 'pro001', 'Notebook', 3500, 'Notebook Dell', 'image' ),
+( 'pro002', 'Cadeira Gamer', 999, 'Cadeira super confortável', 'image' ),
+( 'pro003', 'Escrivaninha', 650, 'Escrivaninha de escritório', 'image' ),
+( 'pro004', 'Fone Bluetooth', 120, 'Fone bluetooth com som fodaaa', 'image' ),
+( 'pro005', 'Teclado gamer Bluetooth', 150, 'Teclado liso e resistente', 'image' );
 
 
 SELECT * FROM users;
@@ -94,10 +82,8 @@ SELECT * FROM purchases
 DROP TABLE purchases;
 
 INSERT INTO purchases
-VALUES ('pur01', 'us001', 199.99, DATETIME());
-
-INSERT INTO purchases
-VALUES ('pur02', 'us002', 99.99, DATETIME());
+VALUES ('pur01', 'us001', 199.99, DATETIME()),
+('pur02', 'us002', 99.99, DATETIME());
 
 UPDATE purchases
 SET

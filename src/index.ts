@@ -25,11 +25,19 @@ app.get("/users", async (req: Request, res: Response) => {
     try {
 
         // const result = await db.raw(`SELECT * FROM users`)
-        const result = await db('users')
+        // const result = await db('users')
+
+        const allUsers = await db.select(
+            'id as id',
+            'name as name',
+            'email as email',
+            'password as password',
+            'created_at as createdAt'
+        ).from('users').orderBy('created_at', 'asc');    
 
         // const result: TUsers[] = users;
 
-        res.status(200).send(result);
+        res.status(200).send(allUsers);
 
     } catch (error: any) {
 
@@ -181,11 +189,19 @@ app.get("/products", async (req: Request, res: Response) => {
     try {
 
         // const result = await db.raw(`SELECT * FROM products`)
-        const result: TProducts[] = await db('products')
+        // const result: TProducts[] = await db('products')
+
+        const allProducts: TProducts[] = await db.select(
+            'id as id',
+            'name as name',
+            'price as price',
+            'description as description',
+            'image_url as imageUrl'
+        ).from('products').orderBy('id', 'asc')
 
         // const result: TProducts[] = products;
 
-        res.status(200).send(result);
+        res.status(200).send(allProducts);
 
     } catch (error: any) {
 
@@ -206,12 +222,24 @@ app.get("/products/search", async (req: Request, res: Response) => {
         const q: string = req.query.q as string || undefined;
 
         if (q) {
-            const result: TProducts[] = await db("products")
+                const result: TProducts[] = await db.select(
+                    'id as id',
+                    'name as name',
+                    'price as price',
+                    'description as description',
+                    'image_url as imageUrl'
+                ).from('products')
                 .where("name", "LIKE", `%${q}%`)
 
             res.status(200).send(result)
         } else {
-            const result: TProducts[] = await db("products")
+            const result: TProducts[] = await db.select(
+                'id as id',
+                'name as name',
+                'price as price',
+                'description as description',
+                'image_url as imageUrl'
+            ).from('products')
 
             res.status(200).send(result)
         }
@@ -302,10 +330,6 @@ app.post("/products", async (req: Request, res: Response) => {
             return;
           }
 
-        // await db.raw(`INSERT INTO products
-        //     VALUES("${id}", "${name}", "${price}", "${description}", "${imageUrl}")
-        // `)
-
         const newProduct = {
             id,
             name,
@@ -314,18 +338,7 @@ app.post("/products", async (req: Request, res: Response) => {
             image_url
         };
         await db('products').insert(newProduct)
-
-        // const newProduct: TProducts = {
-        //     id,
-        //     name,
-        //     price,
-        //     description,
-        //     imageUrl
-        // };
-        // products.push(newProduct)
-
-        // const newProduct = createProduct(id, name, price, description, imageUrl);
-
+       
         res.status(201).send("Produto cadastrado com sucesso")
 
     } catch (error: any) {
@@ -495,7 +508,47 @@ app.get("/purchases/:id", async (req: Request, res: Response) => {
           };
 
         res.status(200).send(result);
+    // try {
+    //     const purchaseId = req.params.id;
     
+    //     const purchase = await db('purchases')
+    //       .select('purchases.id as purchaseId', 'buyer as buyerId', 'total_price as totalPrice', 'created_at as createdAt')
+    //       .where('purchases.id', purchaseId)
+    //       .first();
+    
+    //     if (!purchase) {
+    //       res.status(404).send({ message: "Compra não encontrada" });
+    //       return;
+    //     }
+    
+    //     const buyer = await db('users')
+    //       .select('id as buyerId', 'name as buyerName', 'email as buyerEmail')
+    //       .where('id', purchase.buyerId)
+    //       .first();
+    
+    //     if (!buyer) {
+    //       res.status(404).send({ message: "Comprador não encontrado" });
+    //       return;
+    //     }
+    
+    //     const productsInfo = await db('purchases_products')
+    //       .select('products.id', 'products.name', 'products.price', 'products.description', 'products.image_url as imageUrl', 'purchases_products.quantity')
+    //       .join('products', 'products.id', 'purchases_products.product_id')
+    //       .where('purchases_products.purchase_id', purchaseId);
+    
+    //     if (productsInfo.length === 0) {
+    //       res.status(404).send({ message: "Nenhum produto encontrado para esta compra" });
+    //       return;
+    //     }
+    
+    //     const purchaseInfo = {
+    //       ...purchase,
+    //       ...buyer,
+    //       products: productsInfo,
+    //     };
+    
+    //     res.status(200).send(purchaseInfo);
+
     } catch (error: any) {
 
         if (req.statusCode === 200) {
@@ -570,7 +623,42 @@ app.post("/purchases", async (req: Request, res: Response) => {
     } else {
       throw new Error("Os dados devem ser do formato correto (string para 'buyer' e número para 'quantity').");
     }
+
         
+        // const { id, buyer, total_price } = req.body;
+
+        // if (typeof id !== "string") {
+        //     res.status(400)
+        //     throw new Error("'id' deve ser string")
+        // }
+
+        // if (typeof buyer !== "string") {
+        //     res.status(400)
+        //     throw new Error("'buyer' deve ser string")
+        // }
+
+        // if (typeof total_price !== "number") {
+        //     res.status(400)
+        //     throw new Error("'total_price' deve ser number")
+        // }
+
+
+        // const [purchasesIdExistents]: TPurchases[] | undefined[] = await db("purchases").where({id})
+
+        // if(purchasesIdExistents) {
+        //     res.status(400)
+        //     throw new Error("'id' já existe")
+        // }
+
+        // const newPurchase = {
+        //     id,
+        //     buyer,
+        //     total_price
+        // }
+        // await db('purchases').insert(newPurchase)
+
+        // res.status(201).send("Purchases cadastrado com sucesso");
+
     } catch (error: any) {
 
         if (req.statusCode === 200) {
